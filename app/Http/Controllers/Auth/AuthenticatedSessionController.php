@@ -17,7 +17,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        $judul = 'Login';
+        return view('dashboard.auth.login', compact('judul'));
     }
 
     /**
