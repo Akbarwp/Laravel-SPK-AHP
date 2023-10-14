@@ -6,50 +6,69 @@
         </a>
         <ul class="mt-6">
             <li class="relative px-6 py-3">
-                @if (Request::is('dashboard*'))
+                @if (Request::is('dashboard'))
                     <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
                 @endif
-                <a class="{{ Request::is('dashboard*') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300" href="{{ route('dashboard') }}">
+                <a class="{{ Request::is('dashboard') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300" href="{{ route('dashboard') }}">
                     <i class="ri-home-4-line text-lg"></i>
                     <span class="ml-4">Dashboard</span>
                 </a>
             </li>
         </ul>
         <ul>
-            <li class="relative px-6 py-3">
-                @if (Request::is('produk*'))
+            {{-- Data Master --}}
+            <li class="w-full mt-6">
+                <h6 class="pl-6 font-bold leading-tight uppercase text-xs opacity-60">Master</h6>
+            </li>
+            <li class="relative px-6 pt-3">
+                @if (Request::is('dashboard/kriteria'))
                     <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
                 @endif
-                <a class="{{ Request::is('produk*') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300" href="#">
-                    <i class="ri-box-3-line text-lg"></i>
-                    <span class="ml-4">Produk</span>
+                <a class="{{ Request::is('dashboard/kriteria') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300" href="{{ route('kriteria') }}">
+                    <i class="ri-table-line text-lg"></i>
+                    <span class="ml-4">Kriteria</span>
                 </a>
             </li>
-            <li class="relative px-6 py-3">
-                @if (Request::is('page*'))
+            <li class="relative px-6 pt-3">
+                @if (Request::is('dashboard/kriteria/perhitungan_utama*'))
                     <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
                 @endif
-                <button class="{{ Request::is('page*') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center justify-between w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300 focus:outline-none" @click="togglePagesMenu" aria-haspopup="true">
-                    <span class="inline-flex items-center">
-                        <i class="ri-layout-3-line text-lg"></i>
-                        <span class="ml-4">Pages</span>
-                    </span>
-                    <i class="ri-arrow-down-s-line text-base"></i>
-                </button>
-                <template x-if="isPagesMenuOpen">
-                    <ul x-transition:enter="transition-all ease-in-out duration-300" x-transition:enter-start="opacity-25 max-h-0" x-transition:enter-end="opacity-100 max-h-xl" x-transition:leave="transition-all ease-in-out duration-300" x-transition:leave-start="opacity-100 max-h-xl" x-transition:leave-end="opacity-0 max-h-0" class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900" aria-label="submenu">
-                        <li class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
-                            <a class="w-full" href="pages/login.html">
-                                Login
-                            </a>
-                        </li>
-                        <li class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
-                            <a class="w-full" href="pages/register.html">
-                                Register
-                            </a>
-                        </li>
-                    </ul>
-                </template>
+                <a class="{{ Request::is('dashboard/kriteria/perhitungan_utama*') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300" href="{{ route('perhitungan_utama') }}">
+                    <i class="ri-table-line text-lg"></i>
+                    <span class="ml-4">Perhitungan AHP Kriteria Utama</span>
+                </a>
+            </li>
+            <li class="relative px-6 pt-3">
+                @if (Request::is('dashboard/kategori*'))
+                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+                @endif
+                <a class="{{ Request::is('dashboard/kategori*') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300" href="{{ route('kategori') }}">
+                    <i class="ri-layout-3-line text-lg"></i>
+                    <span class="ml-4">Kategori</span>
+                </a>
+            </li>
+            <li class="relative px-6 pt-3">
+                @if (Request::is('dashboard/sub_kriteria*'))
+                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+                @endif
+                <a class="{{ Request::is('dashboard/sub_kriteria*') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300" href="{{ route('sub_kriteria') }}">
+                    <i class="ri-collage-line text-lg"></i>
+                    <span class="ml-4">Sub Kriteria</span>
+                </a>
+            </li>
+
+            {{-- Data AHP --}}
+            <li class="w-full mt-6">
+                <h6 class="pl-6 font-bold leading-tight uppercase text-xs opacity-60">AHP</h6>
+            </li>
+            <li class="relative px-6 pt-3">
+                @if (Request::is('alternatif*'))
+                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+                @endif
+                <a class="{{ Request::is('alternatif*') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300" href="#">
+                    <i class="ri-braces-line text-lg"></i>
+                    <span class="ml-4">Alternatif</span>
+                </a>
             </li>
         </ul>
         {{-- <div class="px-6 my-6">
