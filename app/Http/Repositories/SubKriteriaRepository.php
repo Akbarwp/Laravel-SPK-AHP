@@ -37,6 +37,11 @@ class SubKriteriaRepository
 
     public function simpan($data)
     {
+        $subKriteria = $this->subKriteria->where('kriteria_id', $data['kriteria_id'])->where('kategori_id', $data['kategori_id'])->first();
+        if ($subKriteria != null) {
+            return $data = false;
+        }
+
         $data = $this->subKriteria->create($data);
         $this->add_matriks_perbandingan($data['kriteria_id']);
 

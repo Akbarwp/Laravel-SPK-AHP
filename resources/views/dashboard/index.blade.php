@@ -18,7 +18,7 @@
                         Kriteria
                     </p>
                     <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                        {{ $kriteria }}
+                        {{ $kriteria->count() }}
                     </p>
                 </div>
             </div>
@@ -79,10 +79,9 @@
                     struktur multi-level dimana level pertama adalah tujuan, yang diikuti level faktor, kriteria, sub
                     kriteria, dan seterusnya ke bawah hingga level terakhir dari alternatif.
                 </p>
-                <a class="font-semibold leading-normal text-sm group text-gray-600 dark:text-gray-300" href="#">
+                <a class="font-semibold leading-normal text-sm group text-gray-600 dark:text-gray-300" href="{{ route('kriteria') }}">
                     Mulai
-                    <i
-                        class="ri-arrow-right-line ease-bounce text-sm group-hover:translate-x-1.25 ml-1 leading-normal transition-all duration-200"></i>
+                    <i class="ri-arrow-right-line ease-bounce text-sm group-hover:translate-x-1.25 ml-1 leading-normal transition-all duration-200"></i>
                 </a>
             </div>
             <div class="min-w-0 p-4 text-white bg-purple-600 rounded-lg shadow-xs">
@@ -96,10 +95,9 @@
                         alternatif yang dipilih oleh pengambil keputusan.</li>
                     <li>Memperhitungkan daya tahan output analisis sensitivitas pengambilan keputusan.</li>
                 </ul>
-                <a class="font-semibold leading-normal text-sm group" href="#">
+                <a class="font-semibold leading-normal text-sm group" href="{{ route('kriteria') }}">
                     Mulai
-                    <i
-                        class="ri-arrow-right-line ease-bounce text-sm group-hover:translate-x-1.25 ml-1 leading-normal transition-all duration-200"></i>
+                    <i class="ri-arrow-right-line ease-bounce text-sm group-hover:translate-x-1.25 ml-1 leading-normal transition-all duration-200"></i>
                 </a>
             </div>
         </div>
@@ -108,24 +106,153 @@
         <div class="grid gap-6 mb-8 md:grid-cols-2">
             <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                 <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                    Kriteria
+                    Hasil Perhitungan AHP Kriteria Utama
                 </h4>
-                <canvas id="bars"></canvas>
-                <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
+                <div class="flex flex-col justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
                     <!-- Chart legend -->
-                    <div class="flex items-center">
-                        <span class="inline-block w-3 h-3 mr-1 bg-teal-500 rounded-full"></span>
-                        <span>Shoes</span>
+                    @php
+                        foreach ($kriteria as $item) {
+                            $jumlah = $matriksPenjumlahan->where('kriteria_id', $item->id)->sum('nilai');
+                            $prioritas = $matriksNilai->where('kriteria_id', $item->id)->sum('nilai') / $matriksNilai->unique('kriteria_id')->count();
+                            $hasil = round($jumlah + $prioritas, 3);
+                        }
+                        $hasilRasio = 0;
+                        $jmlKriteria = $kriteria->count();
+                    @endphp
+                    {{-- Cara Cek CR 1 --}}
+                    <div class="overflow-x-auto p-3 mt-3">
+                        <table id="tabel_data_matriks_penjumlahan" class="nowrap w-full text-sm text-left text-gray-500 dark:text-gray-400 stripe hover" style="width:100%; padding-top: 1em; padding-bottom: 1em;">
+                            <caption class="mb-3 text-base">Consistency Ratio: Cara 1</caption>
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3">Keterangan</th>
+                                    <th scope="col" class="px-4 py-3">Nilai</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $lamdaMaks1 = $hasilRasio / $jmlKriteria;
+                                    $CI1 = ($lamdaMaks1 - $jmlKriteria) / $jmlKriteria;
+                                @endphp
+                                <tr class="border-b dark:border-gray-700">
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">Jumlah Kriteria <span class="font-normal">(n)</span></td>
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
+                                        {{ $jmlKriteria }}
+                                    </td>
+                                </tr>
+                                <tr class="border-b dark:border-gray-700">
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">IR</td>
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
+                                        {{ $IR }}
+                                    </td>
+                                </tr>
+                                <tr class="border-b dark:border-gray-700">
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">λ maks</td>
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
+                                        {{ round($lamdaMaks1, 3) }}
+                                    </td>
+                                </tr>
+                                <tr class="border-b dark:border-gray-700">
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">CI</td>
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
+                                        {{ round($CI1, 3) }}
+                                    </td>
+                                </tr>
+                                <tr class="border-b dark:border-gray-700">
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">CR</td>
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
+                                        @if ($CI1/$IR <= 0.1)
+                                            <span class="text-success">
+                                                {{ round($CI1/$IR, 3) }}
+                                            </span>
+                                            <i class="ri-checkbox-circle-fill ml-1 text-lg text-success"></i>
+                                        @else
+                                            <span class="text-error">
+                                                {{ round($CI1/$IR, 3) }}
+                                            </span>
+                                            <i class="ri-close-circle-fill ml-1 text-lg text-error"></i>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th scope="col" class="px-4 py-3 dark:text-purple-300">Syarat Nilai CR</th>
+                                    <th scope="col" class="px-4 py-3 dark:text-purple-300">CR ≤ 0.1</th>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
-                    <div class="flex items-center">
-                        <span class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"></span>
-                        <span>Bags</span>
+
+                    {{-- Cara Cek CR 2 --}}
+                    <div class="overflow-x-auto p-3 mt-3">
+                        <table id="tabel_data_matriks_penjumlahan" class="nowrap w-full text-sm text-left text-gray-500 dark:text-gray-400 stripe hover" style="width:100%; padding-top: 1em; padding-bottom: 1em;">
+                            <caption class="mb-3 text-base">Consistency Ratio: Cara 2</caption>
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3">Keterangan</th>
+                                    <th scope="col" class="px-4 py-3">Nilai</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $lamdaMaks2 = $matriksPenjumlahanPrioritas->sum('prioritas') / $jmlKriteria;
+                                    $CI2 = ($lamdaMaks2 - $jmlKriteria) / ($jmlKriteria-1);
+                                @endphp
+                                <tr class="border-b dark:border-gray-700">
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">Jumlah Kriteria <span class="font-normal">(n)</span></td>
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
+                                        {{ $jmlKriteria }}
+                                    </td>
+                                </tr>
+                                <tr class="border-b dark:border-gray-700">
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">IR</td>
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
+                                        {{ $IR }}
+                                    </td>
+                                </tr>
+                                <tr class="border-b dark:border-gray-700">
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">λ maks</td>
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
+                                        {{ round($lamdaMaks2, 3) }}
+                                    </td>
+                                </tr>
+                                <tr class="border-b dark:border-gray-700">
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">CI</td>
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
+                                        {{ round($CI2, 3) }}
+                                    </td>
+                                </tr>
+                                <tr class="border-b dark:border-gray-700">
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">CR</td>
+                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
+                                        @if ($CI2/$IR > 0 && $CI2/$IR < 0.1)
+                                            <span class="text-success">
+                                                {{ round($CI2/$IR, 3) }}
+                                            </span>
+                                            <i class="ri-checkbox-circle-fill ml-1 text-lg text-success"></i>
+                                        @else
+                                            <span class="text-error">
+                                                {{ round($CI2/$IR, 3) }}
+                                            </span>
+                                            <i class="ri-close-circle-fill ml-1 text-lg text-error"></i>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th scope="col" class="px-4 py-3 dark:text-purple-300">Syarat Nilai CR</th>
+                                    <th scope="col" class="px-4 py-3 dark:text-purple-300">0 > CR < 0.1</th>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </div>
             <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                 <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                    Hasil Perhitungan AHP
+                    Hasil Perhitungan AHP Alternatif
                 </h4>
                 <canvas id="line"></canvas>
                 <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
@@ -146,5 +273,4 @@
 
 @section('js')
     <script src="{{ asset('js/charts-lines.js') }}"></script>
-    <script src="{{ asset('js/charts-bars.js') }}"></script>
 @endsection

@@ -19,8 +19,8 @@
                             <div class="form-control w-full max-w-md">
                                 <label class="label">
                                     <span class="label-text font-semibold">
-                                        {{ $item->nama_kategori }}
-                                        <i class="ri-arrow-right-line text-lg"></i>
+                                        <span class="text-gray-700 dark:text-gray-400">{{ $item->nama_kategori }}</span>
+                                        <i class="ri-arrow-right-line dark:text-gray-400 text-lg"></i>
                                         <span class="text-purple-600 dark:text-purple-300">{{ $item->nama_kategori_banding }}</span>
                                     </span>
                                 </label>

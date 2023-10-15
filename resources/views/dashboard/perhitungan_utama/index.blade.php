@@ -46,7 +46,7 @@
                             <tbody>
                                 @foreach ($matriksPerbandingan->unique('kriteria_id') as $item)
                                     <tr class="border-b dark:border-gray-700">
-                                        <td class="px-4 py-3 text-gray-700 uppercase font-semibold">
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 uppercase font-semibold">
                                             {{ $item->nama_kriteria }}
                                             <a href="{{ route('matriks_perbandingan_utama.ubah', ['kriteria_id' => $item->kriteria_id]) }}" class="ml-1"><i class="ri-pencil-fill text-yellow-500"></i></a>
                                         </td>
@@ -72,7 +72,7 @@
                     </div>
                 </div>
 
-                @if ($matriksNilai->first() != null)
+                @if ($matriksNilai->where('kriteria_id', $kriteria->last()->id)->first() != null)
                     {{-- Tabel Matriks Nilai --}}
                     <div class="mb-7 bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                         <div class="flex justify-between items-center d p-4 mb-5">
@@ -97,16 +97,16 @@
                                 <tbody>
                                     @foreach ($matriksNilai->unique('kriteria_id') as $item)
                                         <tr class="border-b dark:border-gray-700">
-                                            <td class="px-4 py-3 text-gray-700 uppercase font-semibold">
+                                            <td class="px-4 py-3 text-gray-700 dark:text-gray-400 uppercase font-semibold">
                                                 {{ $item->nama_kriteria }}
                                             </td>
                                             @foreach ($matriksNilai->where('kriteria_id', $item->kriteria_id) as $value)
                                                 <td class="px-4 py-3 text-lg">{{ round($value->nilai, 3) }}</td>
                                             @endforeach
-                                            <td class="px-4 py-3 text-gray-700 uppercase font-semibold">
+                                            <td class="px-4 py-3 text-gray-700 dark:text-gray-400 uppercase font-semibold">
                                                 {{ round($matriksNilai->where('kriteria_id', $item->kriteria_id)->sum('nilai'), 3) }}
                                             </td>
-                                            <td class="px-4 py-3 text-gray-700 uppercase font-semibold">
+                                            <td class="px-4 py-3 text-gray-700 dark:text-gray-400 uppercase font-semibold">
                                                 {{ round($matriksNilai->where('kriteria_id', $item->kriteria_id)->sum('nilai') / $matriksNilai->unique('kriteria_id')->count(), 3) }}
                                             </td>
                                         </tr>
@@ -140,16 +140,16 @@
                                 <tbody>
                                     @foreach ($matriksPenjumlahan->unique('kriteria_id') as $item)
                                         <tr class="border-b dark:border-gray-700">
-                                            <td class="px-4 py-3 text-gray-700 uppercase font-semibold">
+                                            <td class="px-4 py-3 text-gray-700 dark:text-gray-400 uppercase font-semibold">
                                                 {{ $item->nama_kriteria }}
                                             </td>
                                             @foreach ($matriksPenjumlahan->where('kriteria_id', $item->kriteria_id) as $value)
                                                 <td class="px-4 py-3 text-lg">{{ round($value->nilai, 3) }}</td>
                                             @endforeach
-                                            <td class="px-4 py-3 text-gray-700 uppercase font-semibold">
+                                            <td class="px-4 py-3 text-gray-700 dark:text-gray-400 uppercase font-semibold">
                                                 {{ round($matriksPenjumlahan->where('kriteria_id', $item->kriteria_id)->sum('nilai'), 3) }}
                                             </td>
-                                            <td class="px-4 py-3 text-gray-700 uppercase font-semibold">
+                                            <td class="px-4 py-3 text-gray-700 dark:text-gray-400 uppercase font-semibold">
                                                 {{ round($matriksPenjumlahanPrioritas->where('kriteria_id', $item->kriteria_id)->first()->prioritas, 3) }}
                                             </td>
                                         </tr>
@@ -175,24 +175,21 @@
                                         <th scope="col" class="px-4 py-3">Kriteria</th>
                                         <th scope="col" class="px-4 py-3">Matriks Penjumlahan <br> (Jumlah)</th>
                                         <th scope="col" class="px-4 py-3">Matriks Nilai <br> (Prioritas)</th>
-                                        <th scope="col" class="px-4 py-3">Matriks Penjumlahan <br> (Prioritas)</th>
                                         <th scope="col" class="px-4 py-3">Hasil</th>
+                                        <th scope="col" class="px-4 py-3">Matriks Penjumlahan <br> (Prioritas)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($kriteria as $item)
                                         <tr class="border-b dark:border-gray-700">
-                                            <td class="px-4 py-3 text-gray-700 uppercase font-semibold">
+                                            <td class="px-4 py-3 text-gray-700 dark:text-gray-400 uppercase font-semibold">
                                                 {{ $item->nama }}
                                             </td>
-                                            <td class="px-4 py-3 text-gray-700 uppercase font-semibold">
+                                            <td class="px-4 py-3 text-gray-700 dark:text-gray-400 uppercase font-semibold">
                                                 {{ round($matriksPenjumlahan->where('kriteria_id', $item->id)->sum('nilai'), 3) }}
                                             </td>
-                                            <td class="px-4 py-3 text-gray-700 uppercase font-semibold">
+                                            <td class="px-4 py-3 text-gray-700 dark:text-gray-400 uppercase font-semibold">
                                                 {{ round($matriksNilai->where('kriteria_id', $item->id)->sum('nilai') / $matriksNilai->unique('kriteria_id')->count(), 3) }}
-                                            </td>
-                                            <td class="px-4 py-3 text-gray-700 uppercase font-semibold">
-                                                {{ round($matriksPenjumlahanPrioritas->where('kriteria_id', $item->id)->first()->prioritas, 3) }}
                                             </td>
                                             @php
                                                 $jumlah = $matriksPenjumlahan->where('kriteria_id', $item->id)->sum('nilai');
@@ -200,8 +197,11 @@
 
                                                 $hasil = round($jumlah + $prioritas, 3);
                                             @endphp
-                                            <td class="px-4 py-3 text-gray-700 uppercase font-semibold">
+                                            <td class="px-4 py-3 text-gray-700 dark:text-gray-400 uppercase font-semibold">
                                                 {{ round($hasil, 3) }}
+                                            </td>
+                                            <td class="px-4 py-3 text-gray-700 dark:text-gray-400 uppercase font-semibold">
+                                                {{ round($matriksPenjumlahanPrioritas->where('kriteria_id', $item->id)->first()->prioritas, 3) }}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -216,8 +216,8 @@
                                                 $hasilRasio += round($jumlah + $prioritas, 3);
                                             }
                                         @endphp
-                                        <th scope="col" colspan="4" class="px-4 py-3 text-center">Jumlah</th>
-                                        <th scope="col" class="px-4 py-3">{{ round($hasilRasio, 3) }}</th>
+                                        <th scope="col" colspan="3" class="px-4 py-3 text-center">Jumlah</th>
+                                        <th scope="col" colspan="2" class="px-4 py-3">{{ round($hasilRasio, 3) }}</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -244,32 +244,32 @@
                                         $CI1 = ($lamdaMaks1 - $jmlKriteria) / $jmlKriteria;
                                     @endphp
                                     <tr class="border-b dark:border-gray-700">
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">Jumlah Kriteria <span class="font-normal">(n)</span></td>
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">Jumlah Kriteria <span class="font-normal">(n)</span></td>
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
                                             {{ $jmlKriteria }}
                                         </td>
                                     </tr>
                                     <tr class="border-b dark:border-gray-700">
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">Indeks Random Consistency (IR)</td>
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">Indeks Random Consistency (IR)</td>
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
                                             {{ $IR }}
                                         </td>
                                     </tr>
                                     <tr class="border-b dark:border-gray-700">
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">λ maks <span class="font-normal">(Jumlah / n)</span></td>
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">λ maks <span class="font-normal">(Jumlah / n)</span></td>
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
                                             {{ round($lamdaMaks1, 3) }}
                                         </td>
                                     </tr>
                                     <tr class="border-b dark:border-gray-700">
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">Nilai Consistency Index (CI) <span class="font-normal">((λ maks - n)/n)</span></td>
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">Nilai Consistency Index (CI) <span class="font-normal">((λ maks - n)/n)</span></td>
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
                                             {{ round($CI1, 3) }}
                                         </td>
                                     </tr>
                                     <tr class="border-b dark:border-gray-700">
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">Nilai Cocsistency Ratio (CR) <span class="font-normal">(CI / IR)</span></td>
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">Nilai Consistency Ratio (CR) <span class="font-normal">(CI / IR)</span></td>
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
                                             @if ($CI1/$IR <= 0.1)
                                                 <span class="text-success">
                                                     {{ round($CI1/$IR, 3) }}
@@ -286,8 +286,8 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th scope="col" class="px-4 py-3">Syarat Nilai CR</th>
-                                        <th scope="col" class="px-4 py-3">CR ≤ 0.1</th>
+                                        <th scope="col" class="px-4 py-3 dark:text-purple-300">Syarat Nilai CR</th>
+                                        <th scope="col" class="px-4 py-3 dark:text-purple-300">CR ≤ 0.1</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -309,32 +309,32 @@
                                         $CI2 = ($lamdaMaks2 - $jmlKriteria) / ($jmlKriteria-1);
                                     @endphp
                                     <tr class="border-b dark:border-gray-700">
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">Jumlah Kriteria <span class="font-normal">(n)</span></td>
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">Jumlah Kriteria <span class="font-normal">(n)</span></td>
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
                                             {{ $jmlKriteria }}
                                         </td>
                                     </tr>
                                     <tr class="border-b dark:border-gray-700">
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">Indeks Random Consistency (IR)</td>
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">Indeks Random Consistency (IR)</td>
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
                                             {{ $IR }}
                                         </td>
                                     </tr>
                                     <tr class="border-b dark:border-gray-700">
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">λ maks <span class="font-normal">(Jumlah / n)</span></td>
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">λ maks <span class="font-normal">(Jumlah / n)</span></td>
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
                                             {{ round($lamdaMaks2, 3) }}
                                         </td>
                                     </tr>
                                     <tr class="border-b dark:border-gray-700">
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">Nilai Consistency Index (CI) <span class="font-normal">((λ maks - n)/(n-1))</span></td>
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">Nilai Consistency Index (CI) <span class="font-normal">((λ maks - n)/(n-1))</span></td>
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
                                             {{ round($CI2, 3) }}
                                         </td>
                                     </tr>
                                     <tr class="border-b dark:border-gray-700">
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">Nilai Cocsistency Ratio (CR) <span class="font-normal">(CI / IR)</span></td>
-                                        <td class="px-4 py-3 text-gray-700 font-semibold">
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">Nilai Consistency Ratio (CR) <span class="font-normal">(CI / IR)</span></td>
+                                        <td class="px-4 py-3 text-gray-700 dark:text-gray-400 font-semibold">
                                             @if ($CI2/$IR > 0 && $CI2/$IR < 0.1)
                                                 <span class="text-success">
                                                     {{ round($CI2/$IR, 3) }}
@@ -351,8 +351,8 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th scope="col" class="px-4 py-3">Syarat Nilai CR</th>
-                                        <th scope="col" class="px-4 py-3">0 > CR < 0.1</th>
+                                        <th scope="col" class="px-4 py-3 dark:text-purple-300">Syarat Nilai CR</th>
+                                        <th scope="col" class="px-4 py-3 dark:text-purple-300">0 > CR < 0.1</th>
                                     </tr>
                                 </tfoot>
                             </table>

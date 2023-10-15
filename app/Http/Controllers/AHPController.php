@@ -2,24 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Services\KategoriService;
-use Illuminate\Http\Request;
-use App\Http\Services\KriteriaService;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Services\KategoriService;
+use App\Http\Services\KriteriaService;
+use App\Http\Services\SubKriteriaService;
 
 class AHPController extends Controller
 {
-    protected $kriteriaService, $kategoriService;
+    protected $kriteriaService, $kategoriService, $subKriteriaService;
 
-    public function __construct(KriteriaService $kriteriaService, KategoriService $kategoriService)
+    public function __construct(KriteriaService $kriteriaService, KategoriService $kategoriService, SubKriteriaService $subKriteriaService)
     {
         $this->kriteriaService = $kriteriaService;
         $this->kategoriService = $kategoriService;
+        $this->subKriteriaService = $subKriteriaService;
     }
 
     public function index_perhitungan_utama()
     {
+        if ($this->kriteriaService->getAll()->count() < 3) {
+            return redirect('dashboard/kriteria')->with('gagal', "Kriteria harus lebih dari sama dengan 3!");
+        }
+
         $judul = 'Perhitungan AHP Kriteria Utama';
 
         $kriteria = $this->kriteriaService->getAll();
@@ -41,7 +47,7 @@ class AHPController extends Controller
         $matriksPenjumlahanPrioritas = DB::table('matriks_penjumlahan_prioritas_utama')->get();
         $IR = DB::table('index_random_consistency')->where('ukuran_matriks', $kriteria->count())->first()->nilai;
 
-        // dd($matriksPenjumlahanPrioritas);
+        // dd($matriksNilai->where('kriteria_id', $kriteria->last()->id)->first());
 
         return view('dashboard.perhitungan_utama.index', [
             'judul' => $judul,
@@ -93,8 +99,8 @@ class AHPController extends Controller
         // dd($request->post());
 
         foreach ($this->kriteriaService->getAll() as $value => $item) {
-            DB::table('matriks_perbandingan_utama')->where('kriteria_id', $request->kriteria_id)->where('kriteria_id_banding', $value+1)->update([
-                'nilai' => $request->post()[$value+1],
+            DB::table('matriks_perbandingan_utama')->where('kriteria_id', $request->kriteria_id)->where('kriteria_id_banding', $item->id)->update([
+                'nilai' => $request->post()[$item->id],
             ]);
         }
 
@@ -174,7 +180,7 @@ class AHPController extends Controller
         DB::table('matriks_penjumlahan_utama')->truncate();
         DB::table('matriks_penjumlahan_prioritas_utama')->truncate();
         foreach ($matriksPerbandingan as $item) {
-            $prioritas = $matriksNilaiPrioritas->where('id', $item->kriteria_id_banding)->first()->prioritas;
+            $prioritas = $matriksNilaiPrioritas->where('kriteria_id', $item->kriteria_id_banding)->first()->prioritas;
             // $dataNilai[] = [
             //     'nilai_banding' => $item->nilai,
             //     'prioritas_nilai' => $prioritas,
@@ -201,7 +207,7 @@ class AHPController extends Controller
         // $dataNilai = [];
         foreach ($kriteria as $item) {
             $nilai = $matriksPenjumlahan->where('kriteria_id', $item->id)->sum('nilai');
-            $prioritas = $matriksNilaiPrioritas->where('id', $item->id)->first()->prioritas;
+            $prioritas = $matriksNilaiPrioritas->where('kriteria_id', $item->id)->first()->prioritas;
 
             // $dataNilai[] = [
             //     'penjumlahan_kriteria' => $nilai,
@@ -224,9 +230,14 @@ class AHPController extends Controller
     //? Sub Kriteria
     public function index_perhitungan_kriteria(Request $request)
     {
-        $kriteria = $this->kriteriaService->getDataById($request->kriteria_id);
         $judul = 'Perhitungan AHP Per Kriteria:';
+        $kriteria = $this->kriteriaService->getDataById($request->kriteria_id);
         $kategori = $this->kategoriService->getAll();
+        $subKriteria = $this->subKriteriaService->getWhereKriteria($request->kriteria_id);
+
+        if ($subKriteria->count() != $kategori->count()) {
+            return redirect('dashboard/sub_kriteria')->with('gagal', "Sub Kriteria pada Kriteria:". $kriteria->nama ." belum lengkap!");
+        }
 
         $matriksPerbandingan = DB::table('matriks_perbandingan_kriteria as mpk')
             ->join('kategori as k', 'k.id', '=', 'mpk.kategori_id')
@@ -248,6 +259,8 @@ class AHPController extends Controller
 
         $matriksPenjumlahanPrioritas = DB::table('matriks_penjumlahan_prioritas_kriteria')->where('kriteria_id', $request->kriteria_id)->get();
         $IR = DB::table('index_random_consistency')->where('ukuran_matriks', $kategori->count())->first()->nilai;
+
+        // dd($matriksNilai->where('kategori_id', $kategori->last()->id)->first());
 
         return view('dashboard.sub_kriteria.perhitungan_kriteria.perhitungan', [
             'judul' => $judul,
@@ -299,13 +312,13 @@ class AHPController extends Controller
     {
         // dd($request->post());
 
-        foreach ($this->kriteriaService->getAll() as $value => $item) {
+        foreach ($this->kategoriService->getAll() as $value => $item) {
             DB::table('matriks_perbandingan_kriteria')
                 ->where('kriteria_id', $request->kriteria_id)
                 ->where('kategori_id', $request->kategori_id)
-                ->where('kategori_id_banding', $value+1)
+                ->where('kategori_id_banding', $item->id)
                 ->update([
-                'nilai' => $request->post()[$value+1],
+                'nilai' => $request->post()[$item->id],
             ]);
         }
 

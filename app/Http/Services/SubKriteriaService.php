@@ -40,7 +40,13 @@ class SubKriteriaService
     public function simpanPostData($request)
     {
         $validate = $request->validated();
-        $data = [true, $this->subKriteriaRepository->simpan($validate)];
+        $simpan = $this->subKriteriaRepository->simpan($validate);
+
+        if ($simpan == false) {
+            return $data = [false, "Data sudah ada"];
+        }
+
+        $data = [true, $simpan];
         return $data;
     }
 

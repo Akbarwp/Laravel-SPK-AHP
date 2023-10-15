@@ -3,6 +3,8 @@
 namespace App\Http\Repositories;
 
 use App\Models\Kategori;
+use App\Models\SubKriteria;
+use Illuminate\Support\Facades\DB;
 
 class KategoriRepository
 {
@@ -47,6 +49,13 @@ class KategoriRepository
 
     public function hapus($id)
     {
+        DB::table('matriks_penjumlahan_prioritas_kriteria')->where('kategori_id', $id)->delete();
+        DB::table('matriks_penjumlahan_kriteria')->where('kategori_id', $id)->orWhere('kategori_id_banding', $id)->delete();
+        DB::table('matriks_nilai_prioritas_kriteria')->where('kategori_id', $id)->delete();
+        DB::table('matriks_nilai_kriteria')->where('kategori_id', $id)->orWhere('kategori_id_banding', $id)->delete();
+        DB::table('matriks_perbandingan_kriteria')->where('kategori_id', $id)->orWhere('kategori_id_banding', $id)->delete();
+        SubKriteria::where('kategori_id', $id)->delete();
+
         $data = [
             $this->kategori->where('id', $id)->delete(),
         ];

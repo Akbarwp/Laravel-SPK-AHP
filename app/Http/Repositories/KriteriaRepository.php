@@ -3,12 +3,13 @@
 namespace App\Http\Repositories;
 
 use App\Models\Kriteria;
+use App\Models\SubKriteria;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class KriteriaRepository
 {
-    protected $kriteria, $subKriteria, $penilaian;
+    protected $kriteria;
 
     public function __construct(Kriteria $kriteria)
     {
@@ -80,10 +81,21 @@ class KriteriaRepository
 
     public function hapus($id)
     {
+        DB::table('matriks_penjumlahan_prioritas_kriteria')->where('kriteria_id', $id)->delete();
+        DB::table('matriks_penjumlahan_kriteria')->where('kriteria_id', $id)->delete();
+        DB::table('matriks_nilai_prioritas_kriteria')->where('kriteria_id', $id)->delete();
+        DB::table('matriks_nilai_kriteria')->where('kriteria_id', $id)->delete();
+        DB::table('matriks_perbandingan_kriteria')->where('kriteria_id', $id)->delete();
+
+        DB::table('matriks_penjumlahan_prioritas_utama')->where('kriteria_id', $id)->delete();
+        DB::table('matriks_penjumlahan_utama')->where('kriteria_id', $id)->orWhere('kriteria_id_banding', $id)->delete();
+        DB::table('matriks_nilai_prioritas_utama')->where('kriteria_id', $id)->delete();
+        DB::table('matriks_nilai_utama')->where('kriteria_id', $id)->orWhere('kriteria_id_banding', $id)->delete();
+        DB::table('matriks_perbandingan_utama')->where('kriteria_id', $id)->orWhere('kriteria_id_banding', $id)->delete();
+
         $data = [
-            DB::table('matriks_perbandingan_utama')->truncate(),
+            SubKriteria::where('kriteria_id', $id)->delete(),
             $this->kriteria->where('id', $id)->delete(),
-            $this->add_matriks_perbandingan(),
         ];
         return $data;
     }
