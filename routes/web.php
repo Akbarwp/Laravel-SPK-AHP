@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\AHPController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AHPController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PenilaianController;
+use App\Http\Controllers\AlternatifController;
 use App\Http\Controllers\SubKriteriaController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -90,6 +92,31 @@ Route::group([
         Route::get('/matriks_perbandingan/{kriteria_id}/{kategori_id}', [AHPController::class, 'ubah_matriks_perbandingan_kriteria'])->name('matriks_perbandingan_kriteria.ubah');
         Route::post('/matriks_perbandingan/{kriteria_id}', [AHPController::class, 'matriks_perbandingan_kriteria'])->name('matriks_perbandingan_kriteria.hitung');
         Route::post('/matriks_kriteria/{kriteria_id}', [AHPController::class, 'matriks_kriteria'])->name('matriks_kriteria.hitung');
+    });
+
+    Route::group([
+        'prefix' => 'alternatif'
+    ], function () {
+        Route::get('/', [AlternatifController::class, 'index'])->name('alternatif');
+        Route::post('/simpan', [AlternatifController::class, 'simpan'])->name('alternatif.simpan');
+        Route::get('/ubah', [AlternatifController::class, 'ubah'])->name('alternatif.ubah');
+        Route::post('/ubah', [AlternatifController::class, 'perbarui'])->name('alternatif.perbarui');
+        Route::post('/hapus', [AlternatifController::class, 'hapus'])->name('alternatif.hapus');
+    });
+
+    Route::group([
+        'prefix' => 'penilaian'
+    ], function () {
+        Route::get('/', [PenilaianController::class, 'index'])->name('penilaian');
+        Route::get('/ubah/{alternatif_id}', [PenilaianController::class, 'ubah'])->name('penilaian.ubah');
+        Route::post('/ubah/{alternatif_id}', [PenilaianController::class, 'perbarui'])->name('penilaian.perbarui');
+        Route::post('/perhitungan_alternatif', [PenilaianController::class, 'perhitungan_alternatif'])->name('penilaian.hitung');
+    });
+
+    Route::group([
+        'prefix' => 'hasil_akhir'
+    ], function () {
+        Route::get('/', [PenilaianController::class, 'hasil_akhir'])->name('penilaian.hasil_akhir');
     });
 });
 

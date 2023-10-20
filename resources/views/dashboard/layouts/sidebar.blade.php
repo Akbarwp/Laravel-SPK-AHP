@@ -62,12 +62,30 @@
                 <h6 class="pl-6 font-bold leading-tight uppercase text-xs opacity-60">AHP</h6>
             </li>
             <li class="relative px-6 pt-3">
-                @if (Request::is('alternatif*'))
+                @if (Request::is('dashboard/alternatif*'))
                     <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
                 @endif
-                <a class="{{ Request::is('alternatif*') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300" href="#">
+                <a class="{{ Request::is('dashboard/alternatif*') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300" href="{{ route('alternatif') }}">
                     <i class="ri-braces-line text-lg"></i>
                     <span class="ml-4">Alternatif</span>
+                </a>
+            </li>
+            <li class="relative px-6 pt-3">
+                @if (Request::is('dashboard/penilaian*'))
+                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+                @endif
+                <a class="{{ Request::is('dashboard/penilaian*') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300" href="{{ route('penilaian') }}">
+                    <i class="ri-survey-line text-lg"></i>
+                    <span class="ml-4">Penilaian Alternatif</span>
+                </a>
+            </li>
+            <li class="relative px-6 pt-3">
+                @if (Request::is('dashboard/hasil_akhir*'))
+                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+                @endif
+                <a class="{{ Request::is('dashboard/hasil_akhir*') ? 'font-semibold text-purple-600 dark:text-purple-300' : 'text-gray-500 dark:text-gray-100' }} inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-purple-600 dark:hover:text-purple-300" href="{{ route('penilaian.hasil_akhir') }}">
+                    <i class="ri-bar-chart-2-line text-lg"></i>
+                    <span class="ml-4">Hasil Akhir</span>
                 </a>
             </li>
         </ul>

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Alternatif;
 use App\Models\User;
 use App\Models\Kategori;
 use App\Models\Kriteria;
@@ -66,5 +67,7 @@ class DatabaseSeeder extends Seeder
                 "updated_at" => Carbon::now(),
             ]);
         }
+
+        Alternatif::factory(10)->create();
     }
 }
