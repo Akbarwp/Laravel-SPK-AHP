@@ -60,7 +60,7 @@
                         Alternatif
                     </p>
                     <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                        4
+                        {{ $alternatif->count() }}
                     </p>
                 </div>
             </div>
@@ -258,12 +258,8 @@
                 <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
                     <!-- Chart legend -->
                     <div class="flex items-center">
-                        <span class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"></span>
-                        <span>Organic</span>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"></span>
-                        <span>Paid</span>
+                        <span class="inline-block w-3 h-3 mr-1 bg-[#0694a2] rounded-full"></span>
+                        <span>Alternatif</span>
                     </div>
                 </div>
             </div>
@@ -272,5 +268,60 @@
 @endsection
 
 @section('js')
-    <script src="{{ asset('js/charts-lines.js') }}"></script>
+    <script>
+        let hasilSolusiData = [];
+        @foreach ($hasilSolusi as $item)
+            hasilSolusiData.push(' {{ $item->nama_alternatif }} ');
+        @endforeach
+
+        const lineConfig = {
+            type: 'line',
+            data: {
+                labels: hasilSolusiData,
+                datasets: [
+                    {
+                        label: 'Nilai',
+                        backgroundColor: '#0694a2',
+                        borderColor: '#0694a2',
+                        data: [{{ $hasilNilaiData }}],
+                        fill: false,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    display: false,
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true,
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Alternatif',
+                        },
+                    },
+                    y: {
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Value',
+                        },
+                    },
+                },
+            },
+        }
+
+        // change this to the id of your chart element in HMTL
+        const lineCtx = document.getElementById('line')
+        window.myLine = new Chart(lineCtx, lineConfig)
+    </script>
 @endsection

@@ -75,6 +75,7 @@ class AlternatifRepository
     public function hapus($id)
     {
         $data = [
+            DB::table('hasil_solusi_ahp')->where('alternatif_id', $id)->delete(),
             $this->penilaian->where('alternatif_id', $id)->delete(),
             $this->alternatif->where('id', $id)->delete(),
         ];

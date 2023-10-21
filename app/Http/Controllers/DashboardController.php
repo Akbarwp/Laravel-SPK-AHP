@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Alternatif;
 use App\Models\Kategori;
 use App\Models\Kriteria;
 use App\Models\SubKriteria;
@@ -17,6 +18,7 @@ class DashboardController extends Controller
         $kriteria = Kriteria::get();
         $kategori = Kategori::get()->count();
         $subKriteria = SubKriteria::get()->count();
+        $alternatif = Alternatif::get();
 
         $matriksNilai = DB::table('matriks_nilai_utama as mnu')
             ->join('kriteria as k', 'k.id', '=', 'mnu.kriteria_id')
@@ -30,7 +32,17 @@ class DashboardController extends Controller
         $matriksPenjumlahanPrioritas = DB::table('matriks_penjumlahan_prioritas_utama')->get();
         $IR = DB::table('index_random_consistency')->where('ukuran_matriks', $kriteria->count())->first()->nilai;
 
-        return view('dashboard.index', compact('judul', 'kriteria', 'kategori', 'subKriteria', 'matriksNilai', 'matriksPenjumlahan', 'matriksPenjumlahanPrioritas', 'IR'));
+        $hasilSolusi = DB::table('hasil_solusi_ahp as hsa')
+            ->join('alternatif as a', 'a.id', '=', 'hsa.alternatif_id')
+            ->select('hsa.*', 'a.nama as nama_alternatif')
+            ->get();
+        $hasilNilaiData = '';
+        foreach ($hasilSolusi as $item) {
+            $hasilNilaiData .= number_format($item->nilai, 3) . ", ";
+        }
+        $hasilNilaiData = rtrim($hasilNilaiData, ", ");
+
+        return view('dashboard.index', compact('judul', 'kriteria', 'kategori', 'subKriteria', 'alternatif', 'hasilSolusi', 'hasilNilaiData', 'matriksNilai', 'matriksPenjumlahan', 'matriksPenjumlahanPrioritas', 'IR'));
     }
 
     public function profile(Request $request)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Repositories;
 
+use App\Models\Alternatif;
 use App\Models\Kriteria;
 use App\Models\SubKriteria;
 use Carbon\Carbon;
@@ -33,6 +34,7 @@ class KriteriaRepository
         $data = $this->kriteria->create($data);
         DB::table('matriks_perbandingan_utama')->truncate();
         $this->add_matriks_perbandingan();
+        $this->add_penilaian_alternatif();
 
         return $data;
     }
@@ -56,6 +58,26 @@ class KriteriaRepository
                         'nilai' => null,
                         'kriteria_id' => $item->id,
                         'kriteria_id_banding' => $value->id,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ]);
+                }
+            }
+        }
+    }
+
+    public function add_penilaian_alternatif()
+    {
+        $alternatif = Alternatif::all();
+        $kriteria = $this->kriteria->all();
+        foreach ($kriteria as $value) {
+            foreach ($alternatif as $item) {
+                $penilaian = DB::table('penilaian')->where('alternatif_id', $item->id)->where('kriteria_id', $value->id)->first();
+                if ($penilaian == null) {
+                    DB::table('penilaian')->insert([
+                        'alternatif_id' => $item->id,
+                        'kriteria_id' => $value->id,
+                        'sub_kriteria_id' => null,
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now(),
                     ]);
@@ -92,6 +114,8 @@ class KriteriaRepository
         DB::table('matriks_nilai_prioritas_utama')->where('kriteria_id', $id)->delete();
         DB::table('matriks_nilai_utama')->where('kriteria_id', $id)->orWhere('kriteria_id_banding', $id)->delete();
         DB::table('matriks_perbandingan_utama')->where('kriteria_id', $id)->orWhere('kriteria_id_banding', $id)->delete();
+
+        DB::table('penilaian')->where('kriteria_id', $id)->delete();
 
         $data = [
             SubKriteria::where('kriteria_id', $id)->delete(),

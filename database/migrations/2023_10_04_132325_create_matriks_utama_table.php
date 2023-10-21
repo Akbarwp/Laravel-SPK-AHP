@@ -50,22 +50,6 @@ return new class extends Migration
             $table->foreignId("kriteria_id")->constrained("kriteria", "id");
             $table->timestamps();
         });
-
-        Schema::create('rasio_konsistensi_utama', function (Blueprint $table) {
-            $table->id();
-            $table->double('jumlah');
-            $table->double('prioritas');
-            $table->double('hasil');
-            $table->foreignId("kriteria_id")->constrained("kriteria", "id");
-            $table->timestamps();
-        });
-
-        Schema::create('perhitungan_ahp_utama', function (Blueprint $table) {
-            $table->id();
-            $table->string('keterangan');
-            $table->double('nilai');
-            $table->timestamps();
-        });
     }
 
     /**
@@ -75,8 +59,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('perhitungan_ahp_utama');
-        Schema::dropIfExists('rasio_konsistensi_utama');
         Schema::dropIfExists('matriks_nilai_prioritas_utama');
         Schema::dropIfExists('matriks_nilai_utama');
         Schema::dropIfExists('matriks_penjumlahan_prioritas_utama');

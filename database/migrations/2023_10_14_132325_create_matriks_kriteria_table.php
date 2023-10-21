@@ -55,15 +55,6 @@ return new class extends Migration
             $table->foreignId("kategori_id")->constrained("kategori", "id");
             $table->timestamps();
         });
-
-        Schema::create('rasio_konsistensi_kriteria', function (Blueprint $table) {
-            $table->id();
-            $table->double('jumlah');
-            $table->double('prioritas');
-            $table->double('hasil');
-            $table->foreignId("kriteria_id")->constrained("kriteria", "id");
-            $table->timestamps();
-        });
     }
 
     /**
@@ -73,7 +64,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rasio_konsistensi_kriteria');
         Schema::dropIfExists('matriks_nilai_prioritas_kriteria');
         Schema::dropIfExists('matriks_nilai_kriteria');
         Schema::dropIfExists('matriks_penjumlahan_prioritas_kriteria');
