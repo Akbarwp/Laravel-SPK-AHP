@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Services\KategoriService;
@@ -141,5 +142,63 @@ class PenilaianController extends Controller
             'judul' => $judul,
             'hasil' => $hasil,
         ]);
+    }
+
+    public function pdf_ahp()
+    {
+        $judul = 'Laporan Hasil AHP';
+        $kriteria = $this->kriteriaService->getAll();
+
+        $matriksNilaiKriteria = DB::table('matriks_nilai_prioritas_utama as mnu')
+            ->join('kriteria as k', 'k.id', '=', 'mnu.kriteria_id')
+            ->select('mnu.*', 'k.id as kriteria_id', 'k.nama as nama_kriteria')
+            ->get();
+        $matriksNilaiSubKriteria = DB::table('matriks_nilai_prioritas_kriteria as mnk')
+            ->join('kategori as k', 'k.id', '=', 'mnk.kategori_id')
+            ->select('mnk.*', 'k.id as kategori_id', 'k.nama as nama_kategori')
+            ->get();
+        if ($matriksNilaiKriteria->where('kriteria_id', $kriteria->last()->id)->first() == null) {
+            return redirect('dashboard/kriteria/perhitungan_utama')->with('gagal', 'Perhitungan Kriteria Utama belum tuntas!');
+        } else if ($matriksNilaiSubKriteria->where('kriteria_id', $kriteria->last()->id)->first() == null) {
+            return redirect('dashboard/sub_kriteria')->with('gagal', 'Perhitungan Sub Kriteria belum tuntas!');
+        }
+
+        $data = $this->penilaianService->getAll();
+        $kategori = $this->kategoriService->getAll();
+        $hasil = DB::table('hasil_solusi_ahp as hsa')
+            ->join('alternatif as a', 'a.id', '=', 'hsa.alternatif_id')
+            ->select('hsa.*', 'a.nama as nama_alternatif')
+            ->get();
+
+        $pdf = PDF::setOptions(['defaultFont' => 'sans-serif'])->loadview('dashboard.pdf.penilaian', [
+            'judul' => $judul,
+            'data' => $data,
+            'kriteria' => $kriteria,
+            'kategori' => $kategori,
+            'matriksNilaiKriteria' => $matriksNilaiKriteria,
+            'matriksNilaiSubKriteria' => $matriksNilaiSubKriteria,
+            'hasil' => $hasil,
+        ]);
+
+        // return $pdf->download('laporan-penilaian.pdf');
+        return $pdf->stream();
+    }
+
+    public function pdf_hasil()
+    {
+        $judul = 'Laporan Hasil Akhir';
+        $hasil = DB::table('hasil_solusi_ahp as hsa')
+            ->join('alternatif as a', 'a.id', '=', 'hsa.alternatif_id')
+            ->select('hsa.*', 'a.nama as nama_alternatif')
+            ->orderBy('hsa.nilai', 'desc')
+            ->get();
+
+        $pdf = PDF::setOptions(['defaultFont' => 'sans-serif'])->loadview('dashboard.pdf.hasil_akhir', [
+            'judul' => $judul,
+            'hasil' => $hasil,
+        ]);
+
+        // return $pdf->download('laporan-penilaian.pdf');
+        return $pdf->stream();
     }
 }

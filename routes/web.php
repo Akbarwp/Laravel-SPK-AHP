@@ -114,6 +114,8 @@ Route::group([
         Route::get('/ubah/{alternatif_id}', [PenilaianController::class, 'ubah'])->name('penilaian.ubah');
         Route::post('/ubah/{alternatif_id}', [PenilaianController::class, 'perbarui'])->name('penilaian.perbarui');
         Route::post('/perhitungan_alternatif', [PenilaianController::class, 'perhitungan_alternatif'])->name('penilaian.hitung');
+        Route::post('/pdf_ahp', [PenilaianController::class, 'pdf_ahp'])->name('penilaian.pdf_ahp');
+        Route::post('/pdf_hasil', [PenilaianController::class, 'pdf_hasil'])->name('penilaian.pdf_hasil');
     });
 
     Route::group([

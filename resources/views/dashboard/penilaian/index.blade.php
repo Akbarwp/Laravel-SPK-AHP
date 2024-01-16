@@ -20,6 +20,13 @@
                                     Hitung AHP Alternatif
                                 </button>
                             </form>
+                            <form action="{{ route('penilaian.pdf_ahp') }}" method="post" enctype="multipart/form-data" target="_blank">
+                                @csrf
+                                <button type="submit" class="btn text-white dark:text-gray-800 normal-case bg-rose-600 hover:bg-rose-600 hover:bg-opacity-70 hover:border-opacity-70 dark:bg-rose-300 dark:hover:bg-rose-300 dark:hover:bg-opacity-90 dark:border-rose-300">
+                                    <i class="ri-file-pdf-line"></i>
+                                    Export PDF
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
