@@ -56,4 +56,10 @@ class KategoriService
         $data = $this->kategoriRepository->hapus($request);
         return $data;
     }
+
+    public function import($request)
+    {
+        $data = $this->kategoriRepository->import($request);
+        return $data;
+    }
 }

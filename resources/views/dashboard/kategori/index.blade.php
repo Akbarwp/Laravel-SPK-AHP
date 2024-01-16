@@ -18,6 +18,10 @@
                                     <i class="ri-add-fill"></i>
                                     Tambah {{ $judul }}
                                 </label>
+                                <label for="import_button" class="btn btn-sm text-white dark:text-gray-800 normal-case bg-green-600 hover:bg-green-600 hover:bg-opacity-70 hover:border-opacity-70 dark:bg-green-300 dark:hover:bg-green-300 dark:hover:bg-opacity-90 dark:border-green-300">
+                                    <i class="ri-file-excel-line"></i>
+                                    Import Data
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -103,6 +107,33 @@
                     </form>
                 </div>
                 <label class="modal-backdrop" for="edit_button">Close</label>
+            </div>
+
+            {{-- Import Data --}}
+            <input type="checkbox" id="import_button" class="modal-toggle" />
+            <div class="modal">
+                <div class="modal-box">
+                    <form action="{{ route('kategori.import') }}" method="post" enctype="multipart/form-data">
+                        <h3 class="font-bold text-lg">Import {{ $judul }}</h3>
+                            @csrf
+                            <div class="form-control w-full max-w-xs">
+                                <label class="label">
+                                    <span class="label-text">Import File</span>
+                                </label>
+                                <input type="file" name="import_data" class="file-input file-input-bordered w-full max-w-xs" required />
+                                <label class="label">
+                                    @error('import_data')
+                                        <span class="label-text-alt text-error">{{ $message }}</span>
+                                    @enderror
+                                </label>
+                            </div>
+                        <div class="modal-action">
+                            <button type="submit" class="btn btn-success">Import</button>
+                            <label for="import_button" class="btn">Batal</label>
+                        </div>
+                    </form>
+                </div>
+                <label class="modal-backdrop" for="import_button">Close</label>
             </div>
         </section>
     </div>

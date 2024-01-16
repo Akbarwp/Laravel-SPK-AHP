@@ -62,6 +62,7 @@ Route::group([
         Route::get('/ubah', [KriteriaController::class, 'ubah'])->name('kriteria.ubah');
         Route::post('/ubah', [KriteriaController::class, 'perbarui'])->name('kriteria.perbarui');
         Route::post('/hapus', [KriteriaController::class, 'hapus'])->name('kriteria.hapus');
+        Route::post('/import', [KriteriaController::class, 'import'])->name('kriteria.import');
 
         Route::get('/perhitungan_utama', [AHPController::class, 'index_perhitungan_utama'])->name('perhitungan_utama');
         Route::get('/matriks_perbandingan/{kriteria_id}', [AHPController::class, 'ubah_matriks_perbandingan_utama'])->name('matriks_perbandingan_utama.ubah');
@@ -77,6 +78,7 @@ Route::group([
         Route::get('/ubah', [KategoriController::class, 'ubah'])->name('kategori.ubah');
         Route::post('/ubah', [KategoriController::class, 'perbarui'])->name('kategori.perbarui');
         Route::post('/hapus', [KategoriController::class, 'hapus'])->name('kategori.hapus');
+        Route::post('/import', [KategoriController::class, 'import'])->name('kategori.import');
     });
 
     Route::group([
@@ -102,6 +104,7 @@ Route::group([
         Route::get('/ubah', [AlternatifController::class, 'ubah'])->name('alternatif.ubah');
         Route::post('/ubah', [AlternatifController::class, 'perbarui'])->name('alternatif.perbarui');
         Route::post('/hapus', [AlternatifController::class, 'hapus'])->name('alternatif.hapus');
+        Route::post('/import', [AlternatifController::class, 'import'])->name('alternatif.import');
     });
 
     Route::group([

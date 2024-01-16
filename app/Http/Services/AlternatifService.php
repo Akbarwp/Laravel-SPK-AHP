@@ -56,4 +56,10 @@ class AlternatifService
         $data = $this->alternatifRepository->hapus($request);
         return $data;
     }
+
+    public function import($request)
+    {
+        $data = $this->alternatifRepository->import($request);
+        return $data;
+    }
 }

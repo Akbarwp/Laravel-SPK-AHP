@@ -55,4 +55,17 @@ class KategoriController extends Controller
         $this->kategoriService->hapusPostData($request->id);
         return redirect('dashboard/kategori');
     }
+
+    public function import(Request $request)
+    {
+        // validasi
+        $request->validate([
+            'import_data' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $this->kategoriService->import($request);
+
+        // alihkan halaman kembali
+        return redirect('dashboard/kategori')->with('berhasil', "Data berhasil di import!");
+    }
 }

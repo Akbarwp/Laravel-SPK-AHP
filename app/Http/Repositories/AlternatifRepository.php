@@ -7,6 +7,8 @@ use App\Models\Alternatif;
 use App\Models\Kriteria;
 use App\Models\Penilaian;
 use Illuminate\Support\Facades\DB;
+use App\Imports\AlternatifImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AlternatifRepository
 {
@@ -36,6 +38,19 @@ class AlternatifRepository
         $data = $this->alternatif->create($data);
         $this->add_penilaian_alternatif();
         return $data;
+    }
+
+    public function import($data)
+    {
+        // menangkap file excel
+        $file = $data->file('import_data');
+
+        // import data
+        $import = Excel::import(new AlternatifImport, $file);
+
+        $this->add_penilaian_alternatif();
+
+        return $import;
     }
 
     public function add_penilaian_alternatif()

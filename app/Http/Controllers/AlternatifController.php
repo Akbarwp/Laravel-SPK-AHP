@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\AlternatifRequest;
 use App\Http\Services\AlternatifService;
-use Illuminate\Http\Request;
 
 class AlternatifController extends Controller
 {
@@ -51,5 +51,18 @@ class AlternatifController extends Controller
     {
         $this->alternatifService->hapusPostData($request->id);
         return redirect('dashboard/alternatif');
+    }
+
+    public function import(Request $request)
+    {
+        // validasi
+        $request->validate([
+            'import_data' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $this->alternatifService->import($request);
+
+        // alihkan halaman kembali
+        return redirect('dashboard/alternatif')->with('berhasil', "Data berhasil di import!");
     }
 }

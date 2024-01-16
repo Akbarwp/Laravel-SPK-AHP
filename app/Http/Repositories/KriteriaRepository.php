@@ -2,11 +2,13 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\Alternatif;
-use App\Models\Kriteria;
-use App\Models\SubKriteria;
+use App\Imports\KriteriaImport;
 use Carbon\Carbon;
+use App\Models\Kriteria;
+use App\Models\Alternatif;
+use App\Models\SubKriteria;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KriteriaRepository
 {
@@ -37,6 +39,21 @@ class KriteriaRepository
         $this->add_penilaian_alternatif();
 
         return $data;
+    }
+
+    public function import($data)
+    {
+        // menangkap file excel
+        $file = $data->file('import_data');
+
+        // import data
+        $import = Excel::import(new KriteriaImport, $file);
+
+        DB::table('matriks_perbandingan_utama')->truncate();
+        $this->add_matriks_perbandingan();
+        $this->add_penilaian_alternatif();
+
+        return $import;
     }
 
     public function add_matriks_perbandingan()

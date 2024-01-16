@@ -55,4 +55,17 @@ class KriteriaController extends Controller
         $this->kriteriaService->hapusPostData($request->id);
         return redirect('dashboard/kriteria');
     }
+
+    public function import(Request $request)
+    {
+        // validasi
+        $request->validate([
+            'import_data' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $this->kriteriaService->import($request);
+
+        // alihkan halaman kembali
+        return redirect('dashboard/kriteria')->with('berhasil', "Data berhasil di import!");
+    }
 }

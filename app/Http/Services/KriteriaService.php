@@ -56,4 +56,10 @@ class KriteriaService
         $data = $this->kriteriaRepository->hapus($request);
         return $data;
     }
+
+    public function import($request)
+    {
+        $data = $this->kriteriaRepository->import($request);
+        return $data;
+    }
 }

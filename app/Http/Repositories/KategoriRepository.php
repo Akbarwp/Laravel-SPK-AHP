@@ -4,7 +4,9 @@ namespace App\Http\Repositories;
 
 use App\Models\Kategori;
 use App\Models\SubKriteria;
+use App\Imports\KategoriImport;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KategoriRepository
 {
@@ -60,5 +62,16 @@ class KategoriRepository
             $this->kategori->where('id', $id)->delete(),
         ];
         return $data;
+    }
+
+    public function import($data)
+    {
+        // menangkap file excel
+        $file = $data->file('import_data');
+
+        // import data
+        $import = Excel::import(new KategoriImport, $file);
+
+        return $import;
     }
 }
