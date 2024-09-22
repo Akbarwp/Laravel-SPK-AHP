@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
         //     }
         // }
 
-        $nilaiIR = [0, 0, 0.58, 1.90, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49, 1.51, 1.48, 1.56, 1.57, 1.59];
+        $nilaiIR = [0, 0, 0.58, 0.90, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49, 1.51, 1.48, 1.56, 1.57, 1.59];
         for ($i = 0; $i < 15; $i++) {
             DB::table('index_random_consistency')->insert([
                 "ukuran_matriks" => $i+1,
