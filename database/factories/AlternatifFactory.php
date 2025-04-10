@@ -17,7 +17,7 @@ class AlternatifFactory extends Factory
     public function definition()
     {
         return [
-            'nama' => fake()->name(),
+            'nama' => fake()->word(),
         ];
     }
 }

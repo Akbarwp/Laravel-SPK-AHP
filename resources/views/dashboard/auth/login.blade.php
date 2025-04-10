@@ -28,13 +28,13 @@
                     <div>
                         <label class="block text-sm">
                             <span class="text-gray-700 dark:text-gray-400">Email</span>
-                            <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Email" type="email" name="email" value="admin@gmail.com" required />
+                            <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Email" type="email" name="email" value="{{ old('email') }}" required autofocus />
                         </label>
                     </div>
                     <div>
                         <label class="block mt-4 text-sm">
                             <span class="text-gray-700 dark:text-gray-400">Password</span>
-                            <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Password" type="password" name="password" value="Admin123" required />
+                            <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Password" type="password" name="password" required />
                         </label>
                         @error('password')
                             <label class="text-error text-xs">{{ $message }}</label>

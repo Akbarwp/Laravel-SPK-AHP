@@ -243,6 +243,7 @@ class AHPController extends Controller
             ->join('kategori as k', 'k.id', '=', 'mpk.kategori_id')
             ->where('kriteria_id', $request->kriteria_id)
             ->select('mpk.*', 'k.id as kategori_id', 'k.nama as nama_kategori')
+            ->orderBy('mpk.id', 'asc')
             ->get();
 
         $matriksNilai = DB::table('matriks_nilai_kriteria as mnk')

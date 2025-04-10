@@ -24,7 +24,7 @@ class KriteriaRequest extends FormRequest
     public function rules()
     {
         return [
-            "kode" => "required|string|max:255",
+            "kode" => "required|string|max:6",
             "nama" => "required|string|max:255",
         ];
     }
